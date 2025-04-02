@@ -34,7 +34,7 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
         String token = jwtService.generateAccessToken(savedUser);
-        return new AuthResponseDto("true", new AuthResponseDto.Response(token));
+        return new AuthResponseDto(true,"Successfully user created", new AuthResponseDto.Response(token));
     }
 
     public AuthResponseDto login(LoginRequestDto loginRequestDto) {
@@ -49,6 +49,6 @@ public class AuthService {
 
         String token = jwtService.generateAccessToken(user);
 
-        return new AuthResponseDto("true", new AuthResponseDto.Response(token));
+        return new AuthResponseDto(true,"Successfully user login", new AuthResponseDto.Response(token));
     }
 }

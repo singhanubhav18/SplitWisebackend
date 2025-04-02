@@ -7,7 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthResponseDto {
-    private String status;
+    private Boolean status;
+    private String message;
     private Response response;
 
     @Data
