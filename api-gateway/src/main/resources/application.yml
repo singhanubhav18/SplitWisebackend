@@ -1,0 +1,24 @@
+spring.application.name: api-gateway
+server.port: 8090
+eureka.client.service-url.defaultZone: http://localhost:8762/eureka
+jwt.secretKey: asdfladf98a7df89aysf8d9yasiudfha9s87dfa89syudhfa98sdfyaisuhdfa98sfy
+
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/api/v1/user/**
+          filters:
+            - StripPrefix=2
+
+
+        - id: transaction-service
+          uri: lb://TRANSACTION-SERVICE
+          predicates:
+            - Path=/api/v1/transaction/**
+          filters:
+            - StripPrefix=2
