@@ -12,12 +12,14 @@ import org.springframework.context.annotation.Primary;
 @Setter
 @Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
     @NotEmpty(message = "Name cannot be empty")
     private String name;
 
-    @Id
     @Column(nullable = false, unique = true)
     @NotEmpty(message = "Email cannot be empty")
     private String email;
