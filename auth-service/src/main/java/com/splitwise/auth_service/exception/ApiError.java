@@ -9,16 +9,22 @@ public class ApiError {
 
 
     private boolean status;  // Use boolean instead of string
-    private LocalDateTime timeStamp;
-    private String message;
+    private Response response;
 
     public ApiError() {
-        this.timeStamp = LocalDateTime.now();
+        this.status = false;
+        this.response=new Response();
     }
 
-    public ApiError(String description, int errorCode, boolean status) {
+    public ApiError(String message, boolean status) {
         this();
-        this.message = description;
-        this.status = status;  // Assign the boolean status
+        this.status = status;
+        this.response.setMessage(message);
+        this.response.setTimestamp(LocalDateTime.now());
+    }
+    @Data
+    public static class Response {
+        private LocalDateTime timestamp;
+        private String message;
     }
 }
