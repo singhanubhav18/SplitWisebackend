@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 public class TransactionDto {
-    private int id;
+    private Long id;
     private double totalAmount;
     private TransactionType currentStatus;
     private List<Transaction> transactionList;

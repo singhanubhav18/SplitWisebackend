@@ -17,7 +17,7 @@ import java.util.List;
 @Document(collection = "transaction-detail")
 public class TransactionDetail {
     @Id
-    private int id;
+    private Long id;
     private double totalAmount;
     private TransactionType currentStatus;
     private List<Transaction> transactionList;
