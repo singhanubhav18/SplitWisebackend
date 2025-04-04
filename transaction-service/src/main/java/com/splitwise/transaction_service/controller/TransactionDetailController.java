@@ -15,16 +15,12 @@ public class TransactionDetailController {
     private final TransactionDetailService transactionService;
 
     @GetMapping("/getTransactionDetail")
-    public ResponseEntity<CommonResponse<TransactionDto>> getTransaction(
-           @RequestParam("user_id") int userId
-    ){
-        return ResponseEntity.ok(transactionService.getTransactionDetail(userId));
+    public ResponseEntity<CommonResponse<TransactionDto>> getTransaction(){
+        return ResponseEntity.ok(transactionService.getTransactionDetail());
     }
 
     @GetMapping("/addTransactionDetail")
-    public ResponseEntity<CommonResponse<TransactionDto>> setNewTransactionDetail(
-           @RequestParam("user_id") int userId
-    ){
-        return ResponseEntity.ok(transactionService.setNewTransactionDetail(userId));
+    public ResponseEntity<CommonResponse<TransactionDto>> setNewTransactionDetail(){
+        return ResponseEntity.ok(transactionService.setNewTransactionDetail());
     }
 }

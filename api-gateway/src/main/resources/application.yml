@@ -22,3 +22,4 @@ spring:
             - Path=/api/v1/transaction/**
           filters:
             - StripPrefix=2
+            - name: AuthenticationFilter

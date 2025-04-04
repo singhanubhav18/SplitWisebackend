@@ -1,5 +1,6 @@
 package com.splitwise.transaction_service.service;
 
+import com.splitwise.transaction_service.auth.UserContextHolder;
 import com.splitwise.transaction_service.document.TransactionDetail;
 import com.splitwise.transaction_service.dto.CommonResponse;
 import com.splitwise.transaction_service.dto.TransactionDto;
@@ -21,7 +22,9 @@ public class TransactionDetailService {
 
     private final TransactionDetailRepository transactionRepository;
     private final ModelMapper modelMapper;
-    public CommonResponse<TransactionDto> getTransactionDetail(int userId){
+    public CommonResponse<TransactionDto> getTransactionDetail(){
+        Long userId= UserContextHolder.getCurrentUserId();
+        log.info("Getting userId: {}", userId);
         Optional<TransactionDetail> transactionDetail = transactionRepository.findById(userId);
         if(transactionDetail.isPresent()){
 
@@ -36,7 +39,9 @@ public class TransactionDetailService {
         }
     }
 
-    public CommonResponse<TransactionDto> setNewTransactionDetail(int userId){
+    public CommonResponse<TransactionDto> setNewTransactionDetail(){
+        Long userId= UserContextHolder.getCurrentUserId();
+        log.info("Getting userId: {}", userId);
         TransactionDetail transactionDetail = new TransactionDetail();
         transactionDetail.setTotalAmount(0.0);
         transactionDetail.setCurrentStatus(TransactionType.SETTLED);
