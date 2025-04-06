@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,17 +59,13 @@ public class AuthService {
 
     public List<UserDetailsDto> getByName(String name) {
         // Fetch name from the database
-        try {
-            List<User> users = userRepository.findByName(name);
-            if (users.isEmpty()) {
-                throw new ResourceNotFoundException("No users found with name containing: " + name);
-            }
-            // Map the User entity to UserDetailsDto
-            return users.stream()
-                    .map(user -> modelMapper.map(user, UserDetailsDto.class))
-                    .collect(Collectors.toList());
-        }catch (ResourceNotFoundException e){
-            throw new ResourceNotFoundException("No users found with name containing: " + name);
+        List<User> users = userRepository.findByName(name);
+        if (users.isEmpty()) {
+            return new ArrayList<>();
         }
+        // Map the User entity to UserDetailsDto
+        return users.stream()
+                .map(user -> modelMapper.map(user, UserDetailsDto.class))
+                .collect(Collectors.toList());
     }
 }

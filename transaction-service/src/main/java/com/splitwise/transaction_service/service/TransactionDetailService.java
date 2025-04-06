@@ -9,6 +9,7 @@ import com.splitwise.transaction_service.dto.UserDetailsDto;
 import com.splitwise.transaction_service.enums.TransactionType;
 import com.splitwise.transaction_service.exception.NoTransactionFound;
 import com.splitwise.transaction_service.repository.TransactionDetailRepository;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -61,25 +63,34 @@ public class TransactionDetailService {
                 .build();
     }
     public CommonResponse<List<UserDetailsDto>> searchUserByName(String name) {
-       // CommonResponse<List<UserDetailsDto>> response = new CommonResponse<>();
-        Long userId= UserContextHolder.getCurrentUserId();
-        List<UserDetailsDto> userDetailsList = authServiceClient.getUserByName(name);
+        Long userId = UserContextHolder.getCurrentUserId();  // Fetch userId
         try {
-            // Build response based on the result of userDetailsList
+            List<UserDetailsDto> userDetailsList = authServiceClient.getUserByName(name);
+            // Doing filtering with same userId
+            List<UserDetailsDto> filteredList = userDetailsList.stream()
+                    .filter(user -> !user.getId().equals(userId))
+                    .collect(Collectors.toList());
+            // Returning response with filtered data
             return CommonResponse
                     .<List<UserDetailsDto>>builder()
-                    .status(userDetailsList != null && !userDetailsList.isEmpty())
-                    .data(userDetailsList != null ? userDetailsList : new ArrayList<>())
-                    .description(userDetailsList != null && !userDetailsList.isEmpty()
-                            ? "User details found with name " + userDetailsList.getFirst().getName()
-                            : "No user details found with name " + name)
+                    .status(!filteredList.isEmpty())
+                    .description(filteredList.isEmpty()
+                            ? "No user details found with name: " + name
+                            : "Fetched User details" )
+                    .data(filteredList.isEmpty() ? null : filteredList)
+                    .build();
+
+        } catch (FeignException e) {
+            return CommonResponse
+                    .<List<UserDetailsDto>>builder()
+                    .status(false)
+                    .description("No user details found with name: " + name)
                     .build();
         } catch (Exception e) {
             return CommonResponse
                     .<List<UserDetailsDto>>builder()
                     .status(false)
-                    .data(new ArrayList<>())
-                    .description("No user details found with name: " + name)
+                    .description("An unexpected error occurred while searching for user details with name: " + name)
                     .build();
         }
     }
